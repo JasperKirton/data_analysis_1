@@ -111,22 +111,28 @@ plusfifty_multiAns = splitMultiAns(plusfifty_df)
 print('-----')
 
 
-# create bar chart (histogram) along x axis
+# create bar chart (histogram) along x axisto represent ways in which 
+# people listen to music the most
 ax = global_multiAns['ways'].plot.bar(rot=90)
+plt.tight_layout()
 
 # ------------------------
 
-m = df.loc[:,'gender'] == 'Male'
-f = df.loc[:,'gender'] == 'Female'
-o = df.loc[:,'gender'] == 'Other'
-ns = df.loc[:,'gender'] == 'Prefer not to say'
-print(ns[ns].index)
-print(o[o].index)
+# sum all responses to the question:
+# "Has your most-listened music genre changed since to a year ago?"
+lwgc = pd.value_counts(df['lwg_change'].values.flatten())
 
-
+explode = (0, 0.1)  # only "explode" the 2nd slice (i.e. 'Yes')
+fig1, ax1 = plt.subplots() # Create a figure (top level container for all plot elements) and a set of subplots (axes)
+ax1.pie(lwgc,
+        explode=explode, autopct='%1.1f%%',
+        shadow=True, startangle=90) # set subplot 'ax1' as a pie plot
+ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+ax1.legend(loc=2, labels=['yes','no']) # plot legend
+ax1.set_title('Has your most-listened music genre changed since to a year ago?', fontweight="bold", size=10)
+plt.tight_layout() # make sure the text is not drawn outside of the window
 # ------------------------
 
 #avoid labels to be cut out of the image
-plt.tight_layout()
 
 plt.show()
