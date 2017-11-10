@@ -190,26 +190,22 @@ fig1.set_size_inches(8, 6)
 # people listen to music the most (divided by gender)
 
 ind = np.arange(len(global_multiAns['ways'])) # the x locations for the groups
-width = 0.45       # the width of the bars: can also be len(x) sequence
+width = 0.15       # the width of the bars: can also be len(x) sequence
 
 fig2, (ax21, ax22, ax23) = plt.subplots(1, 3) # create a figure (window-object) with 3 subplots
 
 # create all the various bar charts (using 'bottom' attribute to stack them) [normalised]
-ax21.bar(ind, female_multiAns['waysN'], width, color = '#d62728')
-ax21.bar(ind, male_multiAns['waysN'], width, bottom=female_multiAns['waysN'],
-             color = '#0589f5')         
-ax21.bar(ind, other_multiAns['waysN'], width, 
-             bottom = female_multiAns['waysN'].add(male_multiAns['waysN']), 
-             color = '#eb05c8')
-ax21.bar(ind, pnsgen_multiAns['waysN'], width, 
-             bottom = female_multiAns['waysN'].add(male_multiAns['waysN']).add(
-                     other_multiAns['waysN']), color = '#eb5d05')
+ax21.bar(ind-width*1.5, female_multiAns['waysN'], width, color = '#d62728') 
+ax21.bar(ind-width/2, male_multiAns['waysN'], width, color = '#419bb9')         
+ax21.bar(ind+width/2, other_multiAns['waysN'], width, color = '#be6fa6')
+ax21.bar(ind+width*1.5, pnsgen_multiAns['waysN'], width, color = '#df884e')
              
-ax21.legend(loc=2, labels=('Female', 'Male', 'Other')) # plot legend
+ax21.legend(loc=2, labels=('Female', 'Male', 
+                           'Other', 'Prefer not to say')) # plot legend
 
 # set subplot details
 ax21.set_xticks(ind)
-ax21.set_yticks(np.arange(0,140,10)/100)
+ax21.set_yticks(np.arange(0,40,2)/100)
 ax21.set_xticklabels(male_multiAns['ways'].index, rotation='vertical')
 ax21.set_ylabel('% of people within group')
 ax21.set_title('Ways of listening to music (%)')
@@ -219,15 +215,15 @@ ax21.legend(loc = 'upper left')
 p1 = ax22.bar(ind, female_multiAns['ways'], width, color = '#d62728')
 p1.set_label('Female')
 p2 = ax22.bar(ind, male_multiAns['ways'], width, bottom=female_multiAns['ways'],
-             color = '#0589f5')
+             color = '#419bb9')
 p2.set_label('Male')
 p3 = ax22.bar(ind, other_multiAns['ways'], width, 
              bottom = female_multiAns['ways'].add(male_multiAns['ways']), 
-             color = '#eb05c8')
+             color = '#be6fa6')
 p3.set_label('Other')
 p4 = ax22.bar(ind, pnsgen_multiAns['ways'], width, 
              bottom = female_multiAns['ways'].add(male_multiAns['ways']).add(
-                     other_multiAns['ways']), color = '#eb5d05')
+                     other_multiAns['ways']), color = '#df884e')
 p4.set_label('Other')
 
 # set subplot details
@@ -243,13 +239,13 @@ gen = pd.value_counts(df['gender'].values.flatten())
 explode2 = (0.1, 0, 0, 0)
 ax23.pie(gen,
         explode=explode2, autopct='%1.1f%%',
-        shadow=True, startangle=90, colors = ['#d62728', '#0589f5','#eb05c8','#eb5d05']) # set subplot 'ax1' as a pie plot
+        shadow=True, startangle=90, colors = ['#d62728', '#0589f5','#be6fa6','#df884e']) # set subplot 'ax1' as a pie plot
 ax23.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 ax23.legend(loc=2, labels=['Female','Male', 'Other', 'Prefer not to say']) # plot legend
 ax23.set_title('% of each group in tot. sample')
 
 
-fig2.set_size_inches(14, 6)
+fig2.set_size_inches(14, 10)
 fig2.set_tight_layout(True) #avoid labels to be cut out of the image
              
 print('-----')
