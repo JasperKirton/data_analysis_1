@@ -95,18 +95,24 @@ def splitMultiAns (dataFrame) :
     return temp_dict
 
 global_multiAns = splitMultiAns(df)
+#print(global_multiAns['ways'])
 
 male_multiAns = splitMultiAns(male_df)
+female_multiAns = splitMultiAns(female_df)
+other_multiAns = splitMultiAns(other_df)
+
+teen_multiAns = splitMultiAns(teen_df)
+twenties_multiAns = splitMultiAns(twenties_df)
+thirties_multiAns = splitMultiAns(thirties_df)
+plusfifty_multiAns = splitMultiAns(plusfifty_df)
 
 # ------------------------
 
 print('-----')
 
-# count elements in the new data frame
-ways_count = pd.value_counts(waysDF.values.flatten())
-#print(ways_count)
+
 # create bar chart (histogram) along x axis
-ax = ways_count.plot.bar(rot=90)
+ax = global_multiAns['ways'].plot.bar(rot=90)
 
 # ------------------------
 
