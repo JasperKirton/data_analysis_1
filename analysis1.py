@@ -57,7 +57,7 @@ p4 = ax22.bar(ind, data.pnsgen_multiAns['ways'], width2,
                      data.other_multiAns['ways']), color = '#df884e')
 p4.set_label('Other')
 
-print(np.array(data.female_multiAns['ways']))
+
 
 # set subplot details
 ax22.set_xticks(ind)

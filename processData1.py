@@ -10,9 +10,6 @@ Created on Fri Nov 10 20:45:56 2017
 import pandas as pd
 from pandas.api.types import CategoricalDtype
 import matplotlib.pyplot as plt
-from matplotlib import colors as c
-import numpy as np
-import seaborn as sns
 
 #df = pd.read_csv('/Users/pesa/Google Drive/dataVis2017/Group_Survey.csv')
 df = pd.read_csv('https://docs.google.com/spreadsheets/d/1ym9TjJ7Yftu-AGzNXqCKfqlzLF6efN_qDaNXKYfniA8/gviz/tq?tqx=out:csv')
