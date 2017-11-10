@@ -112,21 +112,21 @@ global_multiAns = splitMultiAns(df)
 #
 def countAllElements(sub_dictionary, global_dictionary) :
     sub_dictionary['ways'] = (sub_dictionary['ways'].add(
-            global_dictionary['ways'])).subtract(global_dictionary['ways'])
+            global_dictionary['ways'])).subtract(global_dictionary['ways']).fillna(0)
     sub_dictionary['plat'] = (sub_dictionary['plat'].add(
-            global_dictionary['plat'])).subtract(global_dictionary['plat'])
+            global_dictionary['plat'])).subtract(global_dictionary['plat']).fillna(0)
     sub_dictionary['discover'] = (sub_dictionary['discover'].add(
-            global_dictionary['discover'])).subtract(global_dictionary['discover'])
+            global_dictionary['discover'])).subtract(global_dictionary['discover']).fillna(0)
     sub_dictionary['lwg'] = (sub_dictionary['lwg'].add(
-            global_dictionary['lwg'])).subtract(global_dictionary['lwg'])
+            global_dictionary['lwg'])).subtract(global_dictionary['lwg']).fillna(0)
     sub_dictionary['waysN'] = (sub_dictionary['waysN'].add(
-            global_dictionary['ways'])).subtract(global_dictionary['ways'])
+            global_dictionary['ways'])).subtract(global_dictionary['ways']).fillna(0)
     sub_dictionary['platN'] = (sub_dictionary['platN'].add(
-            global_dictionary['plat'])).subtract(global_dictionary['plat'])
+            global_dictionary['plat'])).subtract(global_dictionary['plat']).fillna(0)
     sub_dictionary['discoverN'] = (sub_dictionary['discoverN'].add(
-            global_dictionary['discover'])).subtract(global_dictionary['discover'])
+            global_dictionary['discover'])).subtract(global_dictionary['discover']).fillna(0)
     sub_dictionary['lwgN'] = (sub_dictionary['lwgN'].add(
-            global_dictionary['lwg'])).subtract(global_dictionary['lwg'])
+            global_dictionary['lwg'])).subtract(global_dictionary['lwg']).fillna(0)
     return sub_dictionary
     
 # create dictionaries for the gender specific sub-dataframes
@@ -190,15 +190,15 @@ fig1.set_size_inches(8, 6)
 # people listen to music the most (divided by gender)
 
 ind = np.arange(len(global_multiAns['ways'])) # the x locations for the groups
-width = 0.15       # the width of the bars: can also be len(x) sequence
+width = 0.18       # the width of the bars: can also be len(x) sequence
 
 fig2, (ax21, ax22, ax23) = plt.subplots(1, 3) # create a figure (window-object) with 3 subplots
 
 # create all the various bar charts (using 'bottom' attribute to stack them) [normalised]
-ax21.bar(ind-width*1.5, female_multiAns['waysN'], width, color = '#d62728') 
-ax21.bar(ind-width/2, male_multiAns['waysN'], width, color = '#419bb9')         
-ax21.bar(ind+width/2, other_multiAns['waysN'], width, color = '#be6fa6')
-ax21.bar(ind+width*1.5, pnsgen_multiAns['waysN'], width, color = '#df884e')
+ax21.bar(ind-width*1.5-0.02, female_multiAns['waysN'], width, color = '#d62728') 
+ax21.bar(ind-width/2-0.02, male_multiAns['waysN'], width, color = '#419bb9')         
+ax21.bar(ind+width/2+0.02, other_multiAns['waysN'], width, color = '#be6fa6')
+ax21.bar(ind+width*1.5+0.02, pnsgen_multiAns['waysN'], width, color = '#df884e')
              
 ax21.legend(loc=2, labels=('Female', 'Male', 
                            'Other', 'Prefer not to say')) # plot legend
@@ -211,20 +211,23 @@ ax21.set_ylabel('% of people within group')
 ax21.set_title('Ways of listening to music (%)')
 ax21.legend(loc = 'upper left')
 
+width2 = 0.45 
 # create all the various bar charts (using 'bottom' attribute to stack them) [real vals]
-p1 = ax22.bar(ind, female_multiAns['ways'], width, color = '#d62728')
+p1 = ax22.bar(ind, female_multiAns['ways'], width2, color = '#d62728')
 p1.set_label('Female')
-p2 = ax22.bar(ind, male_multiAns['ways'], width, bottom=female_multiAns['ways'],
+p2 = ax22.bar(ind, male_multiAns['ways'], width2, bottom=female_multiAns['ways'],
              color = '#419bb9')
 p2.set_label('Male')
-p3 = ax22.bar(ind, other_multiAns['ways'], width, 
+p3 = ax22.bar(ind, other_multiAns['ways'], width2, 
              bottom = female_multiAns['ways'].add(male_multiAns['ways']), 
              color = '#be6fa6')
 p3.set_label('Other')
-p4 = ax22.bar(ind, pnsgen_multiAns['ways'], width, 
+p4 = ax22.bar(ind, pnsgen_multiAns['ways'], width2, 
              bottom = female_multiAns['ways'].add(male_multiAns['ways']).add(
                      other_multiAns['ways']), color = '#df884e')
 p4.set_label('Other')
+
+print(np.array(female_multiAns['ways']))
 
 # set subplot details
 ax22.set_xticks(ind)
@@ -245,7 +248,7 @@ ax23.legend(loc=2, labels=['Female','Male', 'Other', 'Prefer not to say']) # plo
 ax23.set_title('% of each group in tot. sample')
 
 
-fig2.set_size_inches(14, 10)
+fig2.set_size_inches(16, 10)
 fig2.set_tight_layout(True) #avoid labels to be cut out of the image
              
 print('-----')
