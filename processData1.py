@@ -148,36 +148,3 @@ brit_multiAns = countAllElements(splitMultiAns(brit_df), global_multiAns)
 wother_multiAns = countAllElements(splitMultiAns(wother_df), global_multiAns)
 pnsetn_multiAns = countAllElements(splitMultiAns(pnsetn_df), global_multiAns)
 pnsetn_multiAns = countAllElements(splitMultiAns(pnsetn_df), global_multiAns)
-
-
-# ------------------------
-
-# Pie chart showing whether taste has changed
-
-# sum all responses to the question:
-# "Has your most-listened music genre changed since to a year ago?"
-lwgc = pd.value_counts(df['lwg_change'].values.flatten())
-lwgc_male = pd.value_counts(male_df['lwg_change'].values.flatten())
-lwgc_female = pd.value_counts(female_df['lwg_change'].values.flatten())
-lwgc_other = pd.value_counts(other_df['lwg_change'].values.flatten())
-
-explode = (0, 0.1)  # only "explode" the 2nd slice (i.e. 'Yes')
-fig1, ((ax1,ax2),(ax3,ax4)) = plt.subplots(2,2) # Create a figure (top level container for all plot elements) and a set of subplots (axes)
-
-def pieFunc1 (subplot, group, title='', inlabels=['yes','no']) :
-    subplot.pie(group,
-            explode=explode, autopct='%1.1f%%',
-            shadow=True, startangle=90) # set subplot 'ax1' as a pie plot
-    subplot.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    subplot.legend(loc=2, labels=inlabels) # plot legend
-    subplot.set_title(title, size=10)
-
-pieFunc1(ax1, lwgc, 'global')
-pieFunc1(ax2, lwgc_male, 'male')
-pieFunc1(ax3, lwgc_female, 'female')
-pieFunc1(ax4, lwgc_other, 'other')
-
-fig1.suptitle('Has your most-listened music genre changed since to a year ago?', 
-              y=1.0, fontweight="bold", size=10)
-fig1.set_tight_layout(True) # make sure the text is not drawn outside of the window
-fig1.set_size_inches(8, 6)
