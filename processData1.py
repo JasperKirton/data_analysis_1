@@ -9,7 +9,6 @@ Created on Fri Nov 10 20:45:56 2017
 
 import pandas as pd
 from pandas.api.types import CategoricalDtype
-import matplotlib.pyplot as plt
 
 #df = pd.read_csv('/Users/pesa/Google Drive/dataVis2017/Group_Survey.csv')
 df = pd.read_csv('https://docs.google.com/spreadsheets/d/1ym9TjJ7Yftu-AGzNXqCKfqlzLF6efN_qDaNXKYfniA8/gviz/tq?tqx=out:csv')
@@ -30,6 +29,7 @@ df['ways_to_listen'] = df['ways_to_listen'].astype(CategoricalDtype())
 df['active_src_plat'] = df['active_src_plat'].astype(CategoricalDtype())
 df['discovery_ways'] = df['discovery_ways'].astype(CategoricalDtype())
 df['last_wk_genres'] = df['last_wk_genres'].astype(CategoricalDtype())
+df['dpt'] = df['dpt'].astype(CategoricalDtype())
 df['ethnicity'] = df['ethnicity'].astype(CategoricalDtype())
 # do the same for the age & going out frequency,
 # but this time we make the classes ordered
@@ -148,3 +148,135 @@ brit_multiAns = countAllElements(splitMultiAns(brit_df), global_multiAns)
 wother_multiAns = countAllElements(splitMultiAns(wother_df), global_multiAns)
 pnsetn_multiAns = countAllElements(splitMultiAns(pnsetn_df), global_multiAns)
 pnsetn_multiAns = countAllElements(splitMultiAns(pnsetn_df), global_multiAns)
+
+def splitAndAttach(df, name = 'target column', newcol_names = ['columns']) :
+    # Creating a single dataframe for all the data 
+    # (splitting multiple answers into separate columns)
+
+    # Test Step 1: Split the ways_to_listen column from a string into a list
+    #w1_test = df_copy['ways_to_listen'].str.split(pat=';')
+
+    # Step 2: Same as test above but introducing a dummy matrix
+    # to keep track of for where the multiple answer values exist
+    #w1_test2 = df_copy['ways_to_listen'].str.split(pat=';').apply(lambda x: pd.Series(1, index=x))
+
+    # Step 3 (final): we fill the nans to 0, then astype to bool to make True/False
+    # we then rename new columns if apripriate and concatate it 
+    # to the original frame whilst dropping the old original column
+    w1 = df[name].str.split(pat=';').apply(lambda x: pd.Series(1,
+            index=x)).fillna(0).astype(bool)
+    if newcol_names != ['columns'] :
+        w1.columns = newcol_names
+    return(pd.concat([df, w1], axis=1).drop([name], axis =1))
+    
+
+# Apply above function to turn all mutliple answer fields into bool charts
+# and then connect them all into one expanded dataframe with 
+# multiple answer fields "flattened" across the column axis
+    
+df_spread = splitAndAttach(df, 'ways_to_listen', 
+                     ['listening/cd', 'listening/cassette', 'listening/events', 
+                      'listening/lossless','listening/lossy', 'listening/radio', 
+                      'listening/streaming', 'listening/tv', 'listening/vinyl', 
+                      'listening/youtube'])
+    
+df_spread = splitAndAttach(df_spread, 'active_src_plat', 
+                     ['platform/bandcamp', 'platform/discogs', 'platform/melon', 
+                      'platform/blogs', 'platform/charts', 'platform/onlineshops',
+                      'platform/shazam', 'platform/socials', 
+                      'platform/soundcloud','platfform/spotify', 'platform/tv', 
+                      'platform/youtube', 'platform/itunes',
+                      'platform/physicalshops'])
+    
+df_spread = splitAndAttach(df_spread, 'discovery_ways',
+                     ['discover/adverts', 'discover/clubs', 'discover/blogs', 
+                      'discover/gigs', 'discover/mixes', 'discover/festivals',
+                      'discover/friends', 'discover/bandcamp', 
+                      'discover/onlinerecommend','discover/coffeeshopplaylists', 
+                      'discover/podcasts', 'discover/radio', 'discover/shazam',
+                      'discover/soundtracks', 'discover/tv', 'discover/youtube'])
+
+df_spread = splitAndAttach(df_spread, 'last_wk_genres',
+                     ['lwg/afriasian', 'lwg/classics', 'lwg/contempexp', 
+                      'lwg/edm', 'lwg/idm', 'lwg/funksoul',
+                      'lwg/grime', 'lwg/hiphop', 
+                      'lwg/indiealt','lwg/instrum', 
+                      'lwg/jazz', 'lwg/latin', 'lwg/metalpunk',
+                      'lwg/mtheatre', 'lwg/popchart', 'lwg/reg',
+                      'lwg/rock', 'lwg/soca', 'lwg/soundtrack',
+                      'lwg/worldfolk'])
+                     
+# ------------------------
+
+# create a dataframe that groups indeces by groups (eg. by gender),
+# looks across the "spread out" columns of a multiple answer question
+# and counts the instances where a memeber of each group indicated
+# "True" or "1" for the respective multiple answer column
+# -- Return normalised values not actual counts --
+def bgClusteredPreference(in_df, array_of_columns_names, class_to_group_by) : 
+    all_counts = []
+    for ways in array_of_columns_names :
+        all_counts.append(in_df.groupby(class_to_group_by)[ways].value_counts())
+    # these passages below are basically to only return the dataframe
+    # showing the count of "1" (or "True") instances    
+    temp_df = pd.DataFrame(all_counts).T
+    temp_df = temp_df.sort_index(level=1, ascending=False)
+    temp_df = temp_df.head(int(temp_df.shape[0]/2)).fillna(0)
+    temp_df = (temp_df.groupby(level=0).sum()).T
+    # normalize across the responses of the grouped class
+    for col in temp_df.columns:
+        temp_df[col] = temp_df[col] / temp_df[col].sum()
+    return temp_df.T
+
+# method to create a dictionary of dataframes
+# each being indexed by the classes which we can use to group people
+# who took part in our survey based on their background
+# and having the columns belonging to 1 multiple answer group     
+def countTablesByGroups(df, array_of_classes_to_group_by, array_of_columns_names) : 
+    dict_counts = {}
+    ind = 0
+    for d in array_of_classes_to_group_by :
+        dict_counts[array_of_classes_to_group_by[ind]] = bgClusteredPreference(
+                df, array_of_columns_names, array_of_classes_to_group_by[ind])
+        ind+=1
+    return dict_counts
+
+# classes
+groups = ['dpt', 'age', 'gender', 'ethnicity']
+
+listeningCols = ['listening/cd', 'listening/cassette', 'listening/events', 
+                 'listening/lossless','listening/lossy', 'listening/radio', 
+                 'listening/streaming', 'listening/tv', 'listening/vinyl', 
+                 'listening/youtube']
+
+listening_counts = countTablesByGroups(df_spread, groups, listeningCols)
+
+platformCols = ['platform/bandcamp', 'platform/discogs', 'platform/melon', 
+                      'platform/blogs', 'platform/charts', 'platform/onlineshops',
+                      'platform/shazam', 'platform/socials', 
+                      'platform/soundcloud','platfform/spotify', 'platform/tv', 
+                      'platform/youtube', 'platform/itunes',
+                      'platform/physicalshops']
+
+plat_counts = countTablesByGroups(df_spread, groups, platformCols)
+
+discoverCols = ['discover/adverts', 'discover/clubs', 'discover/blogs', 
+                      'discover/gigs', 'discover/mixes', 'discover/festivals',
+                      'discover/friends', 'discover/bandcamp', 
+                      'discover/onlinerecommend','discover/coffeeshopplaylists', 
+                      'discover/podcasts', 'discover/radio', 'discover/shazam',
+                      'discover/soundtracks', 'discover/tv', 'discover/youtube']
+
+dicover_counts = countTablesByGroups(df_spread, groups, discoverCols)
+
+lwgCols = ['lwg/afriasian', 'lwg/classics', 'lwg/contempexp', 
+                      'lwg/edm', 'lwg/idm', 'lwg/funksoul',
+                      'lwg/grime', 'lwg/hiphop', 
+                      'lwg/indiealt','lwg/instrum', 
+                      'lwg/jazz', 'lwg/latin', 'lwg/metalpunk',
+                      'lwg/mtheatre', 'lwg/popchart', 'lwg/reg',
+                      'lwg/rock', 'lwg/soca', 'lwg/soundtrack',
+                      'lwg/worldfolk']
+
+lwg_counts = countTablesByGroups(df_spread, groups, lwgCols)
+
