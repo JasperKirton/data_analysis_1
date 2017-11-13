@@ -204,7 +204,13 @@ def buildArrOfColl(dictionary, key_name, array_of_column_names):
         coll = pd.concat((coll, dictionary[key_name][array_of_column_names[ind]]), axis=1)
     return coll.T
 
-data_to_plot = buildArrOfColl(data.discover_countsC, 'dpt', data.discoverCols)
+#if you change the line below to data.discover_countsC
+#you get a non-normalised count of people's answers
+dictionary_of_subDfs = data.discover_counts
+
+indeces_list = data.discoverCols
+
+data_to_plot = buildArrOfColl(dictionary_of_subDfs, 'dpt', indeces_list)
 
 # Create a figure instance and a 2D array of axes
 fig9, ax_arr = plt.subplots(2, 2)
@@ -214,39 +220,39 @@ fig9, ax_arr = plt.subplots(2, 2)
 # (in this case it can be a music consumption/discovery way)
 bp1 = ax_arr[0, 0].boxplot(data_to_plot, patch_artist = True)
 ax_arr[0, 0].set_xticklabels(data.passive_discovery_channels, rotation='vertical')
-ax_arr[0, 0].set_ylabel('No of people per department')
+ax_arr[0, 0].set_ylabel('% of people per department')
             
 # -----------------------
 
-data_to_plot2 = buildArrOfColl(data.discover_countsC, 'age', data.discoverCols)
+data_to_plot2 = buildArrOfColl(dictionary_of_subDfs, 'age', indeces_list)
 
 # Create the boxplot by checking what is the average 
 # number of people per class that has a certain characteristic
 # (in this case it can be a music consumption/discovery way)
 bp2 = ax_arr[1, 0].boxplot(data_to_plot2, patch_artist = True)
 ax_arr[1, 0].set_xticklabels(data.passive_discovery_channels, rotation='vertical')
-ax_arr[1, 0].set_ylabel('No of people per age group')            
+ax_arr[1, 0].set_ylabel('% of people per age group')            
 
 # -----------------------
 
-data_to_plot3 = buildArrOfColl(data.discover_countsC, 'gender', data.discoverCols)
+data_to_plot3 = buildArrOfColl(dictionary_of_subDfs, 'gender', indeces_list)
 
 # Create the boxplot by checking what is the average 
 # number of people per class that has a certain characteristic
 # (in this case it can be a music consumption/discovery way)
 bp3 = ax_arr[0, 1].boxplot(data_to_plot3, patch_artist = True)
 ax_arr[0, 1].set_xticklabels(data.passive_discovery_channels, rotation='vertical')
-ax_arr[0, 1].set_ylabel('No of people per department')
+ax_arr[0, 1].set_ylabel('% of people per gender group')
          
 # -----------------------
-data_to_plot4 = buildArrOfColl(data.discover_countsC, 'ethnicity', data.discoverCols)
+data_to_plot4 = buildArrOfColl(dictionary_of_subDfs, 'ethnicity', indeces_list)
 
 # Create the boxplot by checking what is the average 
 # number of people per class that has a certain characteristic
 # (in this case it can be a music consumption/discovery way)
 bp4 = ax_arr[1, 1].boxplot(data_to_plot4, patch_artist = True)
 ax_arr[1, 1].set_xticklabels(data.passive_discovery_channels, rotation='vertical')
-ax_arr[1, 1].set_ylabel('No of people per ethnic group')
+ax_arr[1, 1].set_ylabel('% of people per ethnic group')
             
 # -----------------------
          
@@ -274,10 +280,6 @@ for bplot in (bp1, bp2, bp3, bp4) :
         flier.set(marker='o', color='#e7298a', alpha=0.5) 
     col_i+=1
             
-
-
-
-
 
 fig9.set_tight_layout(True)
 fig9.set_size_inches(16, 12)
