@@ -223,10 +223,12 @@ def bgClusteredPreference(in_df, array_of_columns_names, class_to_group_by) :
     temp_df = temp_df.sort_index(level=1, ascending=False)
     temp_df = temp_df.head(int(temp_df.shape[0]/2)).fillna(0)
     temp_df = (temp_df.groupby(level=0).sum()).T
+    temp_df2 = temp_df.copy()
     # normalize across the responses of the grouped class
     for col in temp_df.columns:
-        temp_df[col] = temp_df[col] / temp_df[col].sum()
-    return temp_df.T
+        temp_df2[col] = temp_df[col] / temp_df[col].sum()
+    # return both the normalised and the count-based dataframes    
+    return (temp_df.T, temp_df2.T)
 
 # method to create a dictionary of dataframes
 # each being indexed by the classes which we can use to group people
@@ -234,12 +236,16 @@ def bgClusteredPreference(in_df, array_of_columns_names, class_to_group_by) :
 # and having the columns belonging to 1 multiple answer group     
 def countTablesByGroups(df, array_of_classes_to_group_by, array_of_columns_names) : 
     dict_counts = {}
+    dict_countsN = {}
     ind = 0
     for d in array_of_classes_to_group_by :
-        dict_counts[array_of_classes_to_group_by[ind]] = bgClusteredPreference(
+        dcount, dnorm = bgClusteredPreference(
                 df, array_of_columns_names, array_of_classes_to_group_by[ind])
+        dict_counts[array_of_classes_to_group_by[ind]] = dcount
+        dict_countsN[array_of_classes_to_group_by[ind]] = dnorm
         ind+=1
-    return dict_counts
+    # return 2 dict: 1 with the counts and 1 normalised
+    return (dict_counts, dict_countsN)
 
 # classes
 groups = ['dpt', 'age', 'gender', 'ethnicity']
@@ -249,7 +255,7 @@ listeningCols = ['listening/cd', 'listening/cassette', 'listening/events',
                  'listening/streaming', 'listening/tv', 'listening/vinyl', 
                  'listening/youtube']
 
-listening_counts = countTablesByGroups(df_spread, groups, listeningCols)
+listening_countsC, listening_counts = countTablesByGroups(df_spread, groups, listeningCols)
 
 platformCols = ['platform/bandcamp', 'platform/discogs', 'platform/melon', 
                       'platform/blogs', 'platform/charts', 'platform/onlineshops',
@@ -258,7 +264,7 @@ platformCols = ['platform/bandcamp', 'platform/discogs', 'platform/melon',
                       'platform/youtube', 'platform/itunes',
                       'platform/physicalshops']
 
-plat_counts = countTablesByGroups(df_spread, groups, platformCols)
+plat_countsC, plat_counts = countTablesByGroups(df_spread, groups, platformCols)
 
 discoverCols = ['discover/adverts', 'discover/clubs', 'discover/blogs', 
                       'discover/gigs', 'discover/mixes', 'discover/festivals',
@@ -267,7 +273,7 @@ discoverCols = ['discover/adverts', 'discover/clubs', 'discover/blogs',
                       'discover/podcasts', 'discover/radio', 'discover/shazam',
                       'discover/soundtracks', 'discover/tv', 'discover/youtube']
 
-dicover_counts = countTablesByGroups(df_spread, groups, discoverCols)
+discover_countsC, discover_counts = countTablesByGroups(df_spread, groups, discoverCols)
 
 lwgCols = ['lwg/afriasian', 'lwg/classics', 'lwg/contempexp', 
                       'lwg/edm', 'lwg/idm', 'lwg/funksoul',
@@ -278,5 +284,32 @@ lwgCols = ['lwg/afriasian', 'lwg/classics', 'lwg/contempexp',
                       'lwg/rock', 'lwg/soca', 'lwg/soundtrack',
                       'lwg/worldfolk']
 
-lwg_counts = countTablesByGroups(df_spread, groups, lwgCols)
+lwg_countsC, lwg_counts = countTablesByGroups(df_spread, groups, lwgCols)
+
+#print(listening_counts['dpt'])
+
+# ------------------------
+
+# some useful arrays of labels
+
+ways_of_listening = ['cd', 'cassette', 'live events', 'lossless digital files',
+           'lossy digital files', 'radio', 'streaming', 'tv', 'vinyl', 'youtube']
+
+platform_to_search = ['bandcamp', 'discogs', 'live events', 'melon',
+           'blogs', 'charts', 'onlineshops', 'shazam', 'social networks',
+           'soundcloud', 'spotify', 'tv', 'youtube', 'itunes',
+           'physical shops']
+
+passive_discovery_channels = ['adverts', 'bars & clubs', 'blogs', 'gigs', 
+                              'DJ mixes', 'festivals', 'friends', 'bandcamp',
+                              'online recommendation services', 
+                              'coffee shop playlists', 'podcasts', 'radio',
+                              'shazam', 'soundtracks', 'tv', 'youtube' ]
+
+last_week_top_genre = ['African/Asian', 'Classical', 'Contemporary/Experimental', 
+                       'Dance Music (Electronic)', 'Electronica/IDM', 
+                       'Funk/Soul', 'Grime', 'Hip-Hop/Rap/R&B', 'Indie/Alternative',
+                       'Instrumental', 'Jazz/Blues', 'Latin/Brazil', 'Metal/Hard-Rock/Punk', 
+                       'Musical Theatre', 'Pop/Chart', 'Reggae/Dancehall', 'Rock/Country', 'Soca', 
+                       'Soundtrack', 'World/Folk'] 
 

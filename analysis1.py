@@ -55,7 +55,7 @@ p23.set_label('Other')
 p24 = ax22.bar(ind, data.pnsgen_multiAns['ways'], width2, 
              bottom = data.female_multiAns['ways'].add(data.male_multiAns['ways']).add(
                      data.other_multiAns['ways']), color = '#df884e')
-p24.set_label('Other')
+p24.set_label('Prefer not to say')
 
 
 
@@ -123,7 +123,7 @@ p33.set_label('Other')
 p34 = ax32.bar(ind, data.pnsgen_multiAns['plat'], width2, 
              bottom = data.female_multiAns['plat'].add(data.male_multiAns['plat']).add(
                      data.other_multiAns['plat']), color = '#df884e')
-p34.set_label('Other')
+p34.set_label('Prefer not to say')
 
 # set subplot details
 ax32.set_xticks(ind)
@@ -210,7 +210,7 @@ p43.set_label('Other')
 p44 = ax42.bar(ind, data.pnsgen_multiAns['lwg'], width2, 
              bottom = data.female_multiAns['lwg'].add(data.male_multiAns['lwg']).add(
                      data.other_multiAns['lwg']), color = '#df884e')
-p44.set_label('Other')
+p44.set_label('Prefer not to say')
 
 # set subplot details
 ax42.set_xticks(ind)
@@ -251,21 +251,21 @@ ax51.set_ylabel('% of people within group')
 ax51.set_title('Ways people passively discover new music (%)')
 ax51.legend(loc = 'upper left')
 
-width52 = 0.45 
+width52 = 0.85 
 # create all the various bar charts (using 'bottom' attribute to stack them) [real vals]
 p51 = ax52.bar(ind, data.female_multiAns['discover'], width52, color = '#d62728')
 p51.set_label('Female')
 p52 = ax52.bar(ind, data.male_multiAns['discover'], width52, bottom=data.female_multiAns['discover'],
              color = '#419bb9')
 p52.set_label('Male')
-p53 = ax42.bar(ind, data.other_multiAns['discover'], width52, 
+p53 = ax52.bar(ind, data.other_multiAns['discover'], width52, 
              bottom = data.female_multiAns['discover'].add(data.male_multiAns['discover']), 
              color = '#be6fa6')
 p53.set_label('Other')
-p54 = ax42.bar(ind, data.pnsgen_multiAns['discover'], width52, 
+p54 = ax52.bar(ind, data.pnsgen_multiAns['discover'], width52, 
              bottom = data.female_multiAns['discover'].add(data.male_multiAns['discover']).add(
                      data.other_multiAns['discover']), color = '#df884e')
-p54.set_label('Other')
+p54.set_label('Prefer not to say')
 
 # set subplot details
 ax52.set_xticks(ind)
@@ -285,7 +285,7 @@ fig5.set_tight_layout(True) #avoid labels to be cut out of the image
 # Plot grouped bar chart of the count of people (divided by gender)
 # that go out to live music events at a certian "frequency"
 
-fig6 = plt.figure()
+#fig6 = plt.figure()
 
 graph1 = sns.factorplot(x='going_out_frequency', hue='gender',
                         data=data.df_spread, palette="BuPu",
