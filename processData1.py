@@ -177,8 +177,7 @@ def splitAndAttach(df, name = 'target column', newcol_names = ['columns']) :
 df_spread = splitAndAttach(df, 'ways_to_listen', 
                      ['listening/cd', 'listening/cassette', 'listening/events', 
                       'listening/lossless','listening/lossy', 'listening/radio', 
-                      'listening/streaming', 'listening/tv', 'listening/vinyl', 
-                      'listening/youtube'])
+                      'listening/streaming', 'listening/tv', 'listening/vinyl'])
     
 df_spread = splitAndAttach(df_spread, 'active_src_plat', 
                      ['platform/bandcamp', 'platform/discogs', 'platform/melon', 
@@ -189,12 +188,12 @@ df_spread = splitAndAttach(df_spread, 'active_src_plat',
                       'platform/physicalshops'])
     
 df_spread = splitAndAttach(df_spread, 'discovery_ways',
-                     ['discover/adverts', 'discover/clubs', 'discover/blogs', 
-                      'discover/gigs', 'discover/mixes', 'discover/festivals',
-                      'discover/friends', 'discover/bandcamp', 
+                     ['discover/adverts', 'discover/live', 'discover/blogs', 
+                      'discover/mixes',
+                      'discover/friends',
                       'discover/onlinerecommend','discover/coffeeshopplaylists', 
-                      'discover/podcasts', 'discover/radio', 'discover/shazam',
-                      'discover/soundtracks', 'discover/tv', 'discover/youtube'])
+                      'discover/radio', 'discover/shazam',
+                      'discover/soundtracks', 'discover/tv'])
 
 df_spread = splitAndAttach(df_spread, 'last_wk_genres',
                      ['lwg/afriasian', 'lwg/classics', 'lwg/contempexp', 
@@ -252,8 +251,7 @@ groups = ['dpt', 'age', 'gender', 'ethnicity']
 
 listeningCols = ['listening/cd', 'listening/cassette', 'listening/events', 
                  'listening/lossless','listening/lossy', 'listening/radio', 
-                 'listening/streaming', 'listening/tv', 'listening/vinyl', 
-                 'listening/youtube']
+                 'listening/streaming', 'listening/tv', 'listening/vinyl']
 
 listening_countsC, listening_counts = countTablesByGroups(df_spread, groups, listeningCols)
 
@@ -266,12 +264,11 @@ platformCols = ['platform/bandcamp', 'platform/discogs', 'platform/melon',
 
 plat_countsC, plat_counts = countTablesByGroups(df_spread, groups, platformCols)
 
-discoverCols = ['discover/adverts', 'discover/clubs', 'discover/blogs', 
-                      'discover/gigs', 'discover/mixes', 'discover/festivals',
-                      'discover/friends', 'discover/bandcamp', 
-                      'discover/onlinerecommend','discover/coffeeshopplaylists', 
-                      'discover/podcasts', 'discover/radio', 'discover/shazam',
-                      'discover/soundtracks', 'discover/tv', 'discover/youtube']
+discoverCols = ['discover/adverts', 'discover/live', 'discover/blogs', 
+                'discover/mixes', 'discover/friends',
+                'discover/onlinerecommend','discover/coffeeshopplaylists', 
+                'discover/radio', 'discover/shazam',
+                'discover/soundtracks', 'discover/tv']
 
 discover_countsC, discover_counts = countTablesByGroups(df_spread, groups, discoverCols)
 
@@ -293,18 +290,18 @@ lwg_countsC, lwg_counts = countTablesByGroups(df_spread, groups, lwgCols)
 # some useful arrays of labels
 
 ways_of_listening = ['cd', 'cassette', 'live events', 'lossless digital files',
-           'lossy digital files', 'radio', 'streaming', 'tv', 'vinyl', 'youtube']
+           'lossy digital files', 'radio', 'streaming', 'tv', 'vinyl']
 
 platform_to_search = ['bandcamp', 'discogs', 'live events', 'melon',
            'blogs', 'charts', 'onlineshops', 'shazam', 'social networks',
            'soundcloud', 'spotify', 'tv', 'youtube', 'itunes',
            'physical shops']
 
-passive_discovery_channels = ['adverts', 'bars & clubs', 'blogs', 'gigs', 
-                              'DJ mixes', 'festivals', 'friends', 'bandcamp',
+passive_discovery_channels = ['adverts', 'live', 'blogs', 
+                              'DJ mixes', 'friends',
                               'online recommendation services', 
-                              'coffee shop playlists', 'podcasts', 'radio',
-                              'shazam', 'soundtracks', 'tv', 'youtube' ]
+                              'coffee shop playlists', 'radio',
+                              'shazam', 'soundtracks', 'tv' ]
 
 last_week_top_genre = ['African/Asian', 'Classical', 'Contemporary/Experimental', 
                        'Dance Music (Electronic)', 'Electronica/IDM', 

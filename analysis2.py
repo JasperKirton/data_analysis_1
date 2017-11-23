@@ -177,7 +177,8 @@ colour = [
          ]
 
 ax8.scatter(data.df_spread['age'], data.df_spread['going_out_frequency'], 
-            s=((sizes['date']/summing(sizes['date']))*100)**2, c=colour)
+            s=((sizes['date']/sizes['date'].count())*20)**2, c=colour)
+
 
 fig8.set_tight_layout(True)
 fig8.set_size_inches(8, 6)
@@ -219,7 +220,7 @@ fig9, ax_arr = plt.subplots(2, 2)
 # number of people per class that has a certain characteristic
 # (in this case it can be a music consumption/discovery way)
 bp1 = ax_arr[0, 0].boxplot(data_to_plot, patch_artist = True)
-ax_arr[0, 0].set_xticklabels(data.passive_discovery_channels, rotation='vertical')
+#ax_arr[0, 0].set_xticklabels(data.passive_discovery_channels, rotation='vertical')
 ax_arr[0, 0].set_ylabel('% of people per department')
             
 # -----------------------
@@ -241,7 +242,7 @@ data_to_plot3 = buildArrOfColl(dictionary_of_subDfs, 'gender', indeces_list)
 # number of people per class that has a certain characteristic
 # (in this case it can be a music consumption/discovery way)
 bp3 = ax_arr[0, 1].boxplot(data_to_plot3, patch_artist = True)
-ax_arr[0, 1].set_xticklabels(data.passive_discovery_channels, rotation='vertical')
+#ax_arr[0, 1].set_xticklabels(data.passive_discovery_channels, rotation='vertical')
 ax_arr[0, 1].set_ylabel('% of people per gender group')
          
 # -----------------------
